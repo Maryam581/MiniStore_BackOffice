@@ -38,20 +38,19 @@ namespace App.WindowsApp.Forms
         {
             var key = typeof(T);
 
-            if(_views.TryGetValue(key, out var view))
+            if (!_views.TryGetValue(key, out var view))
             {
-                 view = factory();
+                view = factory() ?? throw new InvalidOperationException("Factory returned null");
                 view.Dock = DockStyle.Fill;
-                _views[key] = view;//if value not found there
+                _views[key] = view;
             }
-            //View
-            if (!pnlContent.Controls.Contains(view))
 
+            if (!pnlContent.Controls.Contains(view))
             {
                 pnlContent.Controls.Clear();
                 pnlContent.Controls.Add(view);
             }
-             
+
             view.BringToFront();
         }
     }
