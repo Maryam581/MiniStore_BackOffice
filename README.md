@@ -2,3 +2,5 @@
 
 
 #Windows Application
+### App.core
+### App.WindowsApp
