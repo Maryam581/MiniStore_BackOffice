@@ -15,17 +15,65 @@ namespace App.Core.Services
             GenerateFakeProducts();
 
         }
-        public void  Add(Product product) => throw new NotImplementedException();
+        public Product  Add(Product product)
+        {
 
-        public bool Delete(string id) => throw new NotImplementedException();
+            if(product!= null)
+            {
+                product.Id = GenerateId();
+                _products.Add(product);
+            }
+
+            return product;
+        }
+
+        public bool Delete(string id)
+        {
+            Product prodToBeDeleted = GetById(id);
+            _products.Remove(prodToBeDeleted);
+            return true;
+
+
+        }
 
         public List<Product> GetAll()=> _products.OrderBy(static p => p.Name).ToList();
 
-        public Product GetById(string id) => throw new NotImplementedException();
+        public Product GetById(string id)
+        {
+            Product? prod = _products.Find(p => p.Id == id);
+            return prod;
+        }
 
-        public List<Product> Search(string text, ProductCategoryEnum? category, ProductStatusEnum? status) => throw new NotImplementedException();
+        public List<Product> Search(string text, ProductCategoryEnum? category, ProductStatusEnum? status)
+        {
+            //link
+            List<Product> _filtered = _products.ToList ();
+            _filtered = _filtered.Where(p => p.Name.Contains(text)).ToList();
 
-        public bool Update(Product product) => throw new NotImplementedException();
+           if(category is not null  )
+            {
+                _filtered = _filtered.Where(p => p.Category == category).ToList();
+            }
+            return _filtered;
+        }
+
+        public bool Update(Product product)
+        {
+            if (product != null)
+            {
+                Product? existing   = _products.Find(p => p.Id == product.Id);
+                if (existing == null) return false;
+
+                existing.Name = product.Name;
+                existing.Category = product.Category;
+                existing.Price = product.Price;
+                existing.Stock = product.Stock;
+                existing.Status = product.Status;
+                return true;
+
+            }
+            return false;
+        }
 
 
         private void GenerateFakeProducts()
